@@ -3,6 +3,7 @@ from tkinter import messagebox
 from api.client import get_books, delete_book
 from ui.add_book import AddBook
 from ui.edit_book import EditBook
+from ui.chatbot import ChatbotWindow
 
 class Dashboard(ctk.CTkFrame):
     def __init__(self, master):
@@ -23,15 +24,20 @@ class Dashboard(ctk.CTkFrame):
         )
         self.refresh_button.pack(pady=10)
         
-        self.button_frame = ctk.CTkFrame(self)
-        self.button_frame.pack(pady=10)
-        
         self.add_button = ctk.CTkButton(
-            self.button_frame,
+            self,
             text="Add New Book",
-                command=self.open_add_form
+            command=self.open_add_form
         )
-        self.add_button.pack(side="left", padx=10)
+        self.add_button.pack(pady=10)
+        
+        self.chatbot_button = ctk.CTkButton(
+            self,
+            text="AI Assistant",
+            command=self.open_chatbot
+        )
+
+        self.chatbot_button.pack()
         
         self.books_container = ctk.CTkScrollableFrame(
             self,
@@ -107,25 +113,13 @@ class Dashboard(ctk.CTkFrame):
                 card,
                 text=f"Statut : {book.get('statut', 'N/A')}"
             ).pack(anchor="w", padx=10, pady=(0, 10))
-            
-            # Book ID
-            ctk.CTkLabel(
-                card,
-                text=f"ID : {book.get('id_livre', 'N/A')}",
-                font=("Arial", 12)
-            ).pack(anchor="w", padx=10)
 
-# Status color
             status = book.get("statut", "").lower()
-
-            status_color = "gray"
 
             if status == "disponible":
                 status_color = "green"
             elif status == "emprunté":
                 status_color = "red"
-            elif status == "réservé":
-                status_color = "orange"
 
             ctk.CTkLabel(
                 card,
@@ -134,14 +128,12 @@ class Dashboard(ctk.CTkFrame):
                 font=("Arial", 13, "bold")
             ).pack(anchor="w", padx=10, pady=(0, 10))
 
-# Actions frame
             actions_frame = ctk.CTkFrame(
                 card,
                 fg_color="transparent"
             )
             actions_frame.pack(fill="x", padx=10, pady=(0, 10))
 
-# Edit button
             edit_btn = ctk.CTkButton(
                 actions_frame,
                 text="Edit",
@@ -150,7 +142,6 @@ class Dashboard(ctk.CTkFrame):
             )
             edit_btn.pack(side="left", padx=5)
 
-# Delete button
             delete_btn = ctk.CTkButton(
                 actions_frame,
                 text="Delete",
@@ -170,3 +161,6 @@ class Dashboard(ctk.CTkFrame):
     
     def edit_book(self, book):
         EditBook(book, refresh_callback=self.load_books)
+        
+    def open_chatbot(self):
+        ChatbotWindow()

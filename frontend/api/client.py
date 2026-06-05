@@ -29,3 +29,23 @@ def update_book(book_id, data):
 def delete_book(book_id):
     response = requests.delete(f"{BASE_URL}/books/{book_id}")
     return response.json(), response.status_code
+
+def send_question(question):
+    response = requests.post(
+        "http://127.0.0.1:5000/chat",
+        json={"question": question}
+    )
+
+    return response.json()["answer"]
+
+def send_message(message):
+
+    response = requests.post(
+        f"{BASE_URL}/chat",
+        json={"question": message}
+    )
+
+    print("STATUS:", response.status_code)
+    print("TEXT:", response.text)
+
+    return response.json()

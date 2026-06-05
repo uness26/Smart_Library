@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from db.database import get_connection
 from services.book_service import get_all_books, add_book, update_book, delete_book, get_book_by_id
 
 book_bp = Blueprint("books", __name__)
